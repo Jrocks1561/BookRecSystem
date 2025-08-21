@@ -1,6 +1,21 @@
-node_modules
-.env
-dist
-build
+# Node modules folder
+node_modules/
+
+# Logs
 logs
 *.log
+npm-debug.log*
+
+# Environment files
+.env
+
+# Build output
+dist/
+build/
+
+# VS Code settings
+.vscode/
+
+# OS files
+.DS_Store
+Thumbs.db
