@@ -8,15 +8,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/USERNAME/book-recommendation.git"
+    "url": "git+https://github.com/Jrocks1561/BookRecSystem.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/USERNAME/book-recommendation/issues"
+    "url": "https://github.com/Jrocks1561/BookRecSystem/issues"
   },
-  "homepage": "https://github.com/USERNAME/book-recommendation#readme",
+  "homepage": "https://github.com/Jrocks1561/BookRecSystem#readme",
   "dependencies": {
     "express": "^5.1.0"
   }
