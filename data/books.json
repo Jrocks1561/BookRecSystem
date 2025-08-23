@@ -6,9 +6,9 @@
     "author": null,
     "year": null,
     "rating": 3,
-    "status": "available",
+    "status": "banned",
     "createdAt": "2025-08-21T04:20:59.448Z",
-    "updatedAt": "2025-08-21T04:22:34.803Z"
+    "updatedAt": "2025-08-23T02:56:52.858Z"
   },
   {
     "id": "bk2",
@@ -240,5 +240,93 @@
     "status": "available",
     "createdAt": "2025-08-21T04:57:41.586Z",
     "updatedAt": "2025-08-21T04:57:41.587Z"
+  },
+  {
+    "id": "475yfnhwtmbmenk52ma",
+    "title": "Dune",
+    "genre": "Sci-Fi",
+    "author": null,
+    "year": null,
+    "rating": 4.5,
+    "status": "available",
+    "createdAt": "2025-08-23T01:05:13.858Z",
+    "updatedAt": "2025-08-23T01:05:13.858Z"
+  },
+  {
+    "id": "pvtmrzp5bomenkjoqf",
+    "title": "Dune",
+    "genre": "Sci-Fi",
+    "author": null,
+    "year": null,
+    "rating": 4.5,
+    "status": "available",
+    "createdAt": "2025-08-23T01:16:35.703Z",
+    "updatedAt": "2025-08-23T01:16:35.703Z"
+  },
+  {
+    "id": "o02wzp909ymenl8e22",
+    "title": "Dune",
+    "genre": "Sci-Fi",
+    "author": "Frank Herbert",
+    "year": null,
+    "rating": 4.5,
+    "status": "available",
+    "createdAt": "2025-08-23T01:35:48.266Z",
+    "updatedAt": "2025-08-23T01:35:48.266Z"
+  },
+  {
+    "id": "axi5dd90q09menl8gk7",
+    "title": "Dune",
+    "genre": "Sci-Fi",
+    "author": "Frank Herbert",
+    "year": null,
+    "rating": 4.5,
+    "status": "available",
+    "createdAt": "2025-08-23T01:35:51.511Z",
+    "updatedAt": "2025-08-23T01:35:51.512Z"
+  },
+  {
+    "id": "7z9vy5e0s3mmenmxdia",
+    "title": "Throne of Glass",
+    "genre": "Fantasy",
+    "author": "Sarah J. Maas",
+    "year": 2012,
+    "rating": 5,
+    "status": "available",
+    "createdAt": "2025-08-23T02:23:13.570Z",
+    "updatedAt": "2025-08-23T02:23:13.571Z"
+  },
+  {
+    "id": "lz4hsq14unamennod6y",
+    "title": "Throne Of Glass",
+    "genre": "Fantasy",
+    "author": "Sarah J. Maas",
+    "year": 20007,
+    "rating": 3,
+    "status": "available",
+    "createdAt": "2025-08-23T02:44:12.874Z",
+    "updatedAt": "2025-08-23T02:44:12.874Z"
+  },
+  {
+    "id": "te30iuqcq1fmennzxn4",
+    "title": "Dune",
+    "genre": "Sci-Fi",
+    "author": "Frank Herbert",
+    "year": 1965,
+    "rating": 5,
+    "status": "available",
+    "createdAt": "2025-08-23T02:53:12.592Z",
+    "updatedAt": "2025-08-23T02:53:12.592Z"
+  },
+  {
+    "id": "lyol7xmeya9meno5hnv",
+    "title": "New Title",
+    "genre": "Fantasy",
+    "author": "Someone New",
+    "year": 2020,
+    "rating": 4.5,
+    "status": "available",
+    "createdAt": "2025-08-23T02:57:31.819Z",
+    "updatedAt": "2025-08-23T02:57:31.820Z"
   }
 ]
