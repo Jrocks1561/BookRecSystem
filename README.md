@@ -1,59 +1,62 @@
 📚 Book Recommendation System API
 
-A backend API built with Node.js + Express that manages a collection of books, demonstrates real-world backend patterns, and enforces robust validation with Zod.
-This project was designed as a portfolio piece to showcase backend development skills: routing, controllers, services, error handling, validation, and structured project organization.
+A backend API built with Node.js + Express, designed as a portfolio project to showcase backend engineering skills: RESTful routing, validation, error handling, and structured project organization.
 
 🚀 Features
 
-CRUD-like book management:
+CRUD-like book management
 
-Create books
+➕ Create books
 
-Ban/unban books
+🚫 Ban / ✅ Unban books
 
-Replace banned books
+🔄 Replace banned books with new ones (same genre)
 
-Update ratings
+⭐ Update ratings
 
-Get recommendations by genre
+🔎 Get recommendations by genre
 
-Validation with Zod:
+Validation with Zod
 
-Custom error messages (need a book title, year must be a 4-digit number, rating must be a number)
+Strict schemas for create, replace, status, and rating
 
-Consistent schemas for create, replace, status, and rating
+Custom error messages (e.g. year must be a 4-digit number, title required)
 
-Centralized error handling with middleware
+Developer-friendly patterns
 
-Async/await wrapper (asyncRoute) to remove try/catch clutter
+Centralized error handling middleware
 
-Normalized entities (normalizeBook) to ensure consistency
+Async/await wrapper (asyncRoute) → no try/catch clutter
 
-JSON persistence (books stored in data/books.json)
+Normalized entities (normalizeBook) → consistent shape for all books
+
+Persistence
+
+Books stored in data/books.json (file-based storage, simulating a DB)
 
 🗂 Project Structure
 BookRecSystem/
-├─ server.js                # Entry point (starts server)
-├─ app.js                   # Express app setup
+├─ server.js                 # Entry point (starts server)
+├─ app.js                    # Express app setup
 ├─ data/
-│  └─ books.json            # Book data storage
+│  └─ books.json             # Book data storage
 ├─ src/
 │  ├─ routes/
-│  │  └─ books.routes.js    # Route definitions
+│  │  └─ books.routes.js     # Route definitions
 │  ├─ controllers/
-│  │  └─ books.controller.js # Thin controllers (call services)
+│  │  └─ books.controller.js # Controllers call services
 │  ├─ services/
-│  │  └─ books.service.js   # Business logic + persistence
+│  │  └─ books.service.js    # Business logic + persistence
 │  ├─ schemas/
-│  │  └─ books.schema.js    # Zod validation schemas
+│  │  └─ books.schema.js     # Zod validation schemas
 │  ├─ middleware/
-│  │  ├─ asyncRoute.js      # Async error wrapper
-│  │  ├─ errorHandler.js    # Centralized error handling
-│  │  └─ validate.js        # Validation middleware
+│  │  ├─ asyncRoute.js       # Async error wrapper
+│  │  ├─ errorHandler.js     # Centralized error handling
+│  │  └─ validate.js         # Validation middleware
 │  └─ utils/
-│     └─ normalizeBook.js   # Helpers for book structure
+│     └─ normalizeBook.js    # Helpers for book structure
 
-⚡️ Installation & Setup
+⚡ Installation & Setup
 # Clone the repo
 git clone https://github.com/Jrocks1561/BookRecSystem.git
 cd BookRecSystem
@@ -61,42 +64,31 @@ cd BookRecSystem
 # Install dependencies
 npm install
 
-Run the server
-# Start normally
+# Start the server
 npm start
 
-# OR start with nodemon (auto-restarts on file save)
+# OR with auto-reload on file save
 npx nodemon server.js
 
 
-With nodemon, the server will automatically reload whenever you save changes to your code — great for development productivity.
+Server runs by default at:
+👉 http://localhost:3000
 
 🧪 Testing the API
 
-You can test the API using tools like:
+You can test with:
 
 Thunder Client
- (VS Code extension, used during development)
+ (VS Code extension)
 
 Postman
 
-or plain curl from the command line.
-
-The server runs by default on:
-
-http://localhost:3000
-
-
-Example in Thunder Client:
+Curl (CLI)
 
 🔑 API Endpoints
 📗 Create a Book
-POST /books
-Creates a new book in the collection.
-Method → POST
-URL → http://localhost:3000/books
 
-Body → JSON
+POST /books
 
 {
   "title": "Dune",
@@ -106,43 +98,59 @@ Body → JSON
   "rating": 5
 }
 
-
 📚 Get All Books
 
-Get/Books
-http://localhost:3000/books
-
-Returns all books currently stored.
+GET /books
+Returns all books.
 
 🔎 Recommend by Title
 
-GET /recommend?title={bookTitle}
+GET /recommend?title=The%20Hobbit
 Finds similar books in the same genre.
 
 🚫 Ban / ✅ Unban a Book
 
 PATCH /books/:id/status
-Update the status of a book to "banned" or "available".
+Example:
+
+PATCH /books/bk1/status
+
+
+Body:
+
+{ "status": "banned" }
 
 🔄 Replace a Banned Book
 
 PUT /books/:id/replace
-Add a new replacement book for a banned book.
-⚠️ Must match the banned book’s genre.
+Adds a new replacement book (same genre).
+
+Body:
+
+{
+  "title": "The Hobbit: Replacement Edition",
+  "author": "Some Author",
+  "year": 2025,
+  "rating": 4.7
+}
 
 ⭐ Update Rating
 
 PATCH /books/:id/rating
 Update only the rating (0–5).
 
+Body:
+
+{ "rating": 4 }
+
 🛡 Error Handling
 
-All errors are centralized and return consistent JSON:
+All errors return consistent JSON:
 
 {
   "error": {
     "code": "VALIDATION_ERROR",
-    "message": "year: year must be a 4-digit number"
+    "message": "year: must be a 4-digit number"
   }
 }
 
@@ -153,25 +161,26 @@ Request → Route → validate(schema) → Controller → Service → Utils (nor
 
 🧑‍💻 Developer Experience
 
-Nodemon: server auto-restarts on file save for fast iteration.
+🔄 Nodemon → auto-restarts server on file save
 
-Thunder Client: used for API testing (Postman alternative built into VS Code).
+⚡ Thunder Client → lightweight Postman alternative inside VS Code
 
-Zod: strict validation with friendly, custom error messages.
+✅ Zod validation → strict, descriptive error messages
 
-Centralized error handling: consistent responses for every error type.
+🎯 Centralized error handling → consistent responses
 
 📖 Future Improvements
 
- Replace JSON storage with a real database (Postgres, Mongo, or SQLite)
+Swap JSON storage for a real DB (Postgres, Mongo, or SQLite)
 
- Add audit trail (track bans, replacements, rating changes)
+Add audit trail (track bans, replacements, rating changes)
 
- Add authentication & user accounts
+Add authentication & user accounts
 
- Write unit & integration tests with Jest/Supertest
+Unit & integration tests (Jest + Supertest)
 
 ✨ Author
 
-Joshalynn Worth (Jrocks1561)
-Book Recommendation System — built to demonstrate backend engineering skills for real-world applications.
+Joshalynn Worth (@Jrocks1561
+)
+📚 Book Recommendation System — built to demonstrate backend engineering skills for real-world applications.
