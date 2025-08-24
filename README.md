@@ -89,8 +89,11 @@ http://localhost:3000
 
 Example in Thunder Client:
 
+🔑 API Endpoints
+📗 Create a Book
+POST /books
+Creates a new book in the collection.
 Method → POST
-
 URL → http://localhost:3000/books
 
 Body → JSON
@@ -103,15 +106,12 @@ Body → JSON
   "rating": 5
 }
 
-🔑 API Endpoints
-📗 Create a Book
-
-POST /books
-Creates a new book in the collection.
 
 📚 Get All Books
 
-GET /books
+Get/Books
+http://localhost:3000/books
+
 Returns all books currently stored.
 
 🔎 Recommend by Title
