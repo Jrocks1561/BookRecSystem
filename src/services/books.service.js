@@ -1,27 +1,25 @@
-// src/services/books.service.js  (CommonJS)
-const { randomBytes } = require("crypto");
-const pool = require("../../db"); // service is in src/services → go up twice
+import { randomBytes } from "crypto";
+import pool from "../../db.js";
 
 const makeId = () => randomBytes(12).toString("hex"); // 24-char hex, matches CHAR(24)
 
 // Count all books
-exports.count = async () => {
+export const count = async () => {
   const { rows } = await pool.query(`SELECT COUNT(*)::int AS count FROM books`);
   return rows[0].count;
 };
 
 // List all books (newest first)
-exports.getAll = async () => {
+export const getAll = async () => {
   const { rows } = await pool.query(`SELECT * FROM books ORDER BY created_at DESC`);
   return rows;
 };
 
 // Recommend by exact title (case-insensitive) using same-genre titles
-exports.recommendByTitle = async (title) => {
+export const recommendByTitle = async (title) => {
   const trimmed = String(title || "").trim();
   if (!trimmed) return null;
 
-  // find the source book by title (case-insensitive)
   const { rows: found } = await pool.query(
     `SELECT id, title, genre FROM books WHERE lower(title) = lower($1) LIMIT 1`,
     [trimmed]
@@ -30,7 +28,6 @@ exports.recommendByTitle = async (title) => {
 
   const book = found[0];
 
-  // pick up to 10 other titles in the same genre
   const { rows: recs } = await pool.query(
     `SELECT title
        FROM books
@@ -47,7 +44,7 @@ exports.recommendByTitle = async (title) => {
 };
 
 // Create a new book
-exports.create = async ({ title, genre, author, year, rating }) => {
+export const create = async ({ title, genre, author, year, rating }) => {
   if (!title || typeof title !== "string") {
     const err = new Error("title (string) is required");
     err.statusCode = 400; throw err;
@@ -77,13 +74,13 @@ exports.create = async ({ title, genre, author, year, rating }) => {
 };
 
 // Set status to 'active' or 'banned'
-exports.setStatus = async (id, status) => {
+export const setStatus = async (id, status) => {
   if (!["active", "banned"].includes(status)) {
     const err = new Error("status must be 'active' or 'banned'");
     err.statusCode = 400; throw err;
   }
   const { rows } = await pool.query(
-    `UPDATE books SET status = $1 WHERE id = $2 RETURNING *`,
+    `UPDATE books SET status = $1, updated_at = NOW() WHERE id = $2 RETURNING *`,
     [status, id]
   );
   if (rows.length === 0) {
@@ -93,9 +90,8 @@ exports.setStatus = async (id, status) => {
   return rows[0];
 };
 
-// Replace a banned book with a new one **must ber in teh same genre**
-exports.replaceBanned = async (bannedId, { title, author, year, rating, genre }) => {
-  // must exist and be banned prior to replacement
+// Replace a banned book with a new one (must be same genre)
+export const replaceBanned = async (bannedId, { title, author, year, rating, genre }) => {
   const { rows: found } = await pool.query(
     `SELECT id, title, genre, status FROM books WHERE id = $1`,
     [bannedId]
@@ -110,13 +106,11 @@ exports.replaceBanned = async (bannedId, { title, author, year, rating, genre })
     err.statusCode = 400; throw err;
   }
 
-  //  THis logic implements the same-genre rule
   const chosenGenre = (typeof genre === "string" && genre.trim()) ? genre.trim() : banned.genre;
   if (chosenGenre !== banned.genre) {
     const err = new Error("Replacement must be in the same genre as the banned book");
     err.statusCode = 400; throw err;
   }
-
   if (!title || typeof title !== "string") {
     const err = new Error("title (string) is required");
     err.statusCode = 400; throw err;
@@ -146,13 +140,13 @@ exports.replaceBanned = async (bannedId, { title, author, year, rating, genre })
   };
 };
 
-exports.updateRating = async (id, rating) => {
+export const updateRating = async (id, rating) => {
   if (typeof rating !== "number" || rating < 0 || rating > 5) {
     const err = new Error("rating must be between 0 and 5");
     err.statusCode = 400; throw err;
   }
   const { rows } = await pool.query(
-    `UPDATE books SET rating = $1 WHERE id = $2 RETURNING *`,
+    `UPDATE books SET rating = $1, updated_at = NOW() WHERE id = $2 RETURNING *`,
     [rating, id]
   );
   if (rows.length === 0) {

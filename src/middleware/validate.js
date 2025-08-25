@@ -1,7 +1,15 @@
-const { ZodError } = require("zod");
+import { ZodError } from "zod";
 
-const LABELS = { title: "book title", genre: "genre", author: "author", rating: "rating", year: "year" };
-const REQUIRED_FIELDS = ["title", "genre", "author"]; // for POST/create – adjust if you use this middleware elsewhere
+const LABELS = {
+  title: "book title",
+  genre: "genre",
+  author: "author",
+  rating: "rating",
+  year: "year",
+};
+
+// Only fields that are truly required by your create schema
+const REQUIRED_FIELDS = ["title", "genre"];
 
 const formatIssues = (issues) => {
   const msgs = [];
@@ -9,55 +17,48 @@ const formatIssues = (issues) => {
     const key = String(i.path?.[0] ?? "");
     const label = LABELS[key] || key || "value";
 
-    // Missing field 
     if (i.code === "invalid_type" && (i.received === "undefined" || i.received === "null" || i.message === "Required")) {
       msgs.push(`need a ${label}`);
       continue;
     }
-
-    // Empty string
     if (i.code === "too_small" && i.type === "string" && i.minimum === 1) {
       msgs.push(`${label} cannot be empty`);
       continue;
     }
-
-    // Wrong type for numbers -> force friendly message
     if (i.code === "invalid_type" && i.expected === "number") {
       msgs.push(`${label} must be a number`);
       continue;
     }
 
-    // Fallback to Zod's message
     msgs.push(`${key || label}: ${i.message}`);
   }
   return msgs;
 };
 
-const validate = (schema, where = "body") => (req, _res, next) => {
-  try {
-    const data = where === "query" ? req.query : req.body;
-    const parsed = schema.parse(data);
-    if (where === "query") req.query = parsed; else req.body = parsed;
-    next();
-  } catch (e) {
-    if (e instanceof ZodError) {
-      const msgs = formatIssues(e.issues);
+export const validate = (schema, where = "body") => (req, res, next) => {
+  const data = where === "query" ? req.query : req.body;
+  const parsed = schema.safeParse(data);
 
-      
-      const data = where === "query" ? req.query : req.body;
-      for (const f of REQUIRED_FIELDS) {
-        if (!(f in (data || {})) || data[f] === undefined) {
-          const friendly = `need a ${LABELS[f] || f}`;
-          if (!msgs.some(m => m.toLowerCase() === friendly.toLowerCase())) msgs.push(friendly);
-        }
-      }
-
-      e.statusCode = 400;
-      e.code = "VALIDATION_ERROR";
-      e.message = msgs.join("; ");
-    }
-    next(e);
+  if (parsed.success) {
+    if (where === "query") req.query = parsed.data;
+    else req.body = parsed.data; // includes coerced numbers if schema uses z.coerce.number()
+    return next();
   }
-};
 
-module.exports = { validate };
+  const msgs = formatIssues(parsed.error.issues);
+
+  // Add friendly “need a …” for truly missing required fields
+  for (const f of REQUIRED_FIELDS) {
+    const v = data?.[f];
+    const isMissing = v === undefined || v === null || (typeof v === "string" && v.trim() === "");
+    if (isMissing) {
+      const friendly = `need a ${LABELS[f] || f}`;
+      if (!msgs.some((m) => m.toLowerCase() === friendly.toLowerCase())) msgs.push(friendly);
+    }
+  }
+
+  return res.status(400).json({
+    message: "Validation failed",
+    details: msgs,
+  });
+};

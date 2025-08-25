@@ -1,6 +1,4 @@
-const { StatusCodes } = require("http-status-codes");
-
-//cent err handling middleware
+import { StatusCodes } from "http-status-codes";
  
 const errorHandler = (err, req, res, _next) => {
   const status = err.statusCode || StatusCodes.INTERNAL_SERVER_ERROR;

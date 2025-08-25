@@ -1,5 +1,6 @@
-require("dotenv").config();
-const { Client } = require("pg");
+import { Client } from "pg";
+import dotenv from "dotenv";
+dotenv.config();
 
 const bootConfig = {
   host: process.env.PG_BOOT_HOST,

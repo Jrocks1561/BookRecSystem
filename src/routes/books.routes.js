@@ -1,33 +1,22 @@
-const express = require("express");
-const router = express.Router();
+import { Router } from "express";
+import { asyncRoute } from "../middleware/asyncRoute.js";
+import { validate } from "../middleware/validate.js";
+import {
+  createBookSchema,
+  statusSchema,
+  replaceSchema,
+  ratingSchema,
+} from "../schemas/books.schema.js";
+import * as ctrl from "../controllers/books.controller.js";
 
-const { asyncRoute } = require("../middleware/asyncRoute");
-const { validate } = require("../middleware/validate");
-const {
-  createBookSchema, statusSchema, replaceSchema, ratingSchema,
-} = require("../schemas/books.schema");
+const router = Router();
 
-const ctrl = require("../controllers/books.controller");
-
-// health
 router.get("/health", asyncRoute(ctrl.health));
-
-// list
-router.get("/books", asyncRoute(ctrl.list));
-
-// recommend
+router.get("/", asyncRoute(ctrl.list));
 router.get("/recommend", asyncRoute(ctrl.recommend));
+router.post("/", validate(createBookSchema), asyncRoute(ctrl.create));
+router.patch("/:id/status", validate(statusSchema), asyncRoute(ctrl.setStatus));
+router.put("/:id/replace", validate(replaceSchema), asyncRoute(ctrl.replaceBanned));
+router.patch("/:id/rating", validate(ratingSchema), asyncRoute(ctrl.updateRating));
 
-// create (validated)
-router.post("/books", validate(createBookSchema), asyncRoute(ctrl.create));
-
-// set status (validated)
-router.patch("/books/:id/status", validate(statusSchema), asyncRoute(ctrl.setStatus));
-
-// replace banned (validated)
-router.put("/books/:id/replace", validate(replaceSchema), asyncRoute(ctrl.replaceBanned));
-
-// update rating (validated)
-router.patch("/books/:id/rating", validate(ratingSchema), asyncRoute(ctrl.updateRating));
-
-module.exports = router;
+export default router;

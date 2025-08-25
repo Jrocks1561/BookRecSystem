@@ -1,6 +1,5 @@
-const { z } = require("zod");
+import { z } from "zod";
 
-// friendly non-empty trimmed string schema
 const nonEmptyTrimmed = (label) =>
   z
     .string({
@@ -10,8 +9,9 @@ const nonEmptyTrimmed = (label) =>
     .trim()
     .min(1, { message: `${label} cannot be empty` });
 
-// handles 4-digit year validation (1000–9999) & year nees to be a number
+// 4-dgi year
 const yearNumber = z
+  .coerce
   .number({
     invalid_type_error: "year must be a number",
   })
@@ -19,8 +19,9 @@ const yearNumber = z
   .min(1000, { message: "year must be a 4-digit number" })
   .max(9999, { message: "year must be a 4-digit number" });
 
-// handles rating validation (0–5) & rating needs to be a number
+// rating 0–5 ("4.5" -> 4.5)
 const ratingNumber = z
+  .coerce
   .number({
     required_error: "need a rating",
     invalid_type_error: "rating must be a number",
@@ -28,31 +29,32 @@ const ratingNumber = z
   .min(0, { message: "rating must be between 0 and 5" })
   .max(5, { message: "rating must be between 0 and 5" });
 
-const createBookSchema = z.object({
+// Create: title & genre required; author/year/rating optional 
+export const createBookSchema = z.object({
   title: nonEmptyTrimmed("book title"),
   genre: nonEmptyTrimmed("genre"),
-  author: nonEmptyTrimmed("author"),
-  year: yearNumber.optional(),      
+  author: nonEmptyTrimmed("author").optional(),
+  year: yearNumber.optional(),
   rating: ratingNumber.optional(),
 });
 
-const statusSchema = z.object({
-  status: z.enum(["available", "banned"], {
+// Must match DB CHECK constraint: 'active' | 'banned'
+export const statusSchema = z.object({
+  status: z.enum(["active", "banned"], {
     required_error: "need a status",
-    invalid_type_error: "status must be either available or banned",
+    invalid_type_error: "status must be either active or banned",
   }),
 });
 
-const replaceSchema = z.object({
+export const replaceSchema = z.object({
   title: nonEmptyTrimmed("book title"),
-  author: nonEmptyTrimmed("author").optional(), 
-  year: yearNumber.optional(),                  
+  author: nonEmptyTrimmed("author").optional(),
+  year: yearNumber.optional(),
   rating: ratingNumber.optional(),
-  genre: z.string().trim().optional(), 
+  // genre is optional; your service enforces "same genre" if provided
+  genre: z.string().trim().optional(),
 });
 
-const ratingSchema = z.object({
+export const ratingSchema = z.object({
   rating: ratingNumber,
 });
-
-module.exports = { createBookSchema, statusSchema, replaceSchema, ratingSchema };

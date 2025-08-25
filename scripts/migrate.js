@@ -1,7 +1,8 @@
-require("dotenv").config();
-const fs = require("fs");
-const path = require("path");
-const { Client } = require("pg");
+import fs from "fs";
+import path from "path";
+import { Client } from "pg";
+import dotenv from "dotenv";
+dotenv.config();
 
 const appConfig = {
   host: process.env.PG_APP_HOST,

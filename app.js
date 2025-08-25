@@ -1,6 +1,6 @@
-const express = require("express");
-const { errorHandler } = require("./src/middleware/errorHandler");
-const booksRouter = require("./src/routes/books.routes");
+import express from "express";
+import errorHandler from "./src/middleware/errorHandler.js";
+import booksRouter from "./src/routes/books.routes.js";
 
 const app = express();
 app.use(express.json());
