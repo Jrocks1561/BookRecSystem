@@ -1,7 +1,6 @@
-import dotenv from "dotenv";
-import { Pool } from "pg";
-
-dotenv.config();
+// db.js (CommonJS)
+require("dotenv").config();
+const { Pool } = require("pg");
 
 const pool = new Pool({
   host: process.env.PG_APP_HOST || "127.0.0.1",
@@ -14,12 +13,7 @@ const pool = new Pool({
   idleTimeoutMillis: 0,
 });
 
-pool.on("connect", () => {
-  console.log("✅ Connected to PostgreSQL");
-});
+pool.on("connect", () => console.log("YAY Connected to PostgreSQL"));
+pool.on("error", (err) => console.error(" NOOO unexpected PG pool error", err));
 
-pool.on("error", (err) => {
-  console.error("❌ Unexpected error on PostgreSQL pool", err);
-});
-
-export default pool;
+module.exports = pool;

@@ -1,7 +1,6 @@
 {
   "name": "bookrecomendationsystem",
   "version": "1.0.0",
-  "type": "module",
   "description": "A simple book recommendation system with Node.js API",
   "main": "server.js",
   "scripts": {

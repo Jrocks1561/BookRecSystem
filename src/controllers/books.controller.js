@@ -1,15 +1,19 @@
-const svc = require("../services/books.service");
+//use a propper import statement
+//update all functions to arrow functions
+const svc = require("../services/books.service.js");
 
 
+exports.health = async (_req, res) => { 
+    const count = await svc.count();
+       res.json({ ok: true, booksLoaded: count, pid: process.pid });
+   };
 
-exports.health = async (_req, res) => {
-  res.json({ ok: true, booksLoaded: svc.count(), pid: process.pid });
-};
 
 exports.list = async (_req, res) => {
-  res.json(svc.getAll());
-};
-
+   const rows = await svc.getAll();
+   res.json(rows);
+ };
+ 
 exports.recommend = async (req, res) => {
   const title = req.query.title;
   if (!title) {
@@ -17,7 +21,8 @@ exports.recommend = async (req, res) => {
     err.statusCode = 400;
     throw err;
   }
-  const result = svc.recommendByTitle(title);
+
+  const result = await svc.recommendByTitle(title);
   if (!result) {
     const err = new Error(`Book "${title}" not found`);
     err.statusCode = 404;

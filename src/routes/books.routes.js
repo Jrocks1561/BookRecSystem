@@ -24,10 +24,10 @@ router.post("/books", validate(createBookSchema), asyncRoute(ctrl.create));
 // set status (validated)
 router.patch("/books/:id/status", validate(statusSchema), asyncRoute(ctrl.setStatus));
 
-// replace banned (validated body; same-genre rule in controller)
+// replace banned (validated)
 router.put("/books/:id/replace", validate(replaceSchema), asyncRoute(ctrl.replaceBanned));
 
-// update rating only (validated)
+// update rating (validated)
 router.patch("/books/:id/rating", validate(ratingSchema), asyncRoute(ctrl.updateRating));
 
 module.exports = router;
